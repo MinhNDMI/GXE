@@ -1,0 +1,29 @@
+body {
+  margin: 0 !important;
+}
+
+/* Tùy chỉnh styles cho PrimeVue */
+/* .p-component {
+    font-family: var(--font-family);
+}
+
+
+
+.p-button {
+    margin-right: 0.5rem;
+}
+
+.p-datatable .p-datatable-header {
+    padding: 1rem;
+    background: #f8f9fa;
+}
+
+.p-dialog .p-dialog-header {
+    padding: 1.5rem;
+}
+
+.p-dialog .p-dialog-content {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+/* Dark mode support */

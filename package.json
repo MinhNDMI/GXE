@@ -1,29 +1,38 @@
 {
-  "name": "nuxt-app",
+  "name": "vue3-admin",
   "private": true,
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.11.4",
     "@pinia/nuxt": "^0.10.1",
-    "@vueuse/nuxt": "^12.8.2",
-    "nuxt": "^3.15.4",
+    "@vueuse/nuxt": "^13.0.0",
+    "codemirror": "^5.65.19",
+    "codemirror-editor-vue3": "^2.8.0",
+    "nuxt": "^3.10.3",
     "pinia": "^3.0.1",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0",
-    "vue3-easy-data-table": "^1.5.47",
-    "vue3-toastify": "^0.2.2"
+    "primeflex": "^4.0.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^3.50.0",
+    "vue": "^3.4.19",
+    "vue-router": "^4.3.0",
+    "vue3-toastify": "^0.2.8"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.13.1",
-    "@types/node": "^22.13.9",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.17"
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-vue": "^9.22.0",
+    "prettier": "^3.2.5",
+    "sass": "^1.71.1"
   }
 }

@@ -14,7 +14,12 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+// Define page meta
+definePageMeta({
+  middleware: ['auth']
+})
+
 const createProduct = () => {
   // Implement create product logic
   console.log('Create product')

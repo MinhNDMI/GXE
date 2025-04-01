@@ -63,20 +63,20 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
-import { useAuthStore } from '~/store/auth'
+import { useAuthStore } from '~/store/modules/auth'
 import { useRouter } from 'vue-router'
 import { useToast } from '~/composables/useToast'
 
 definePageMeta({
   layout: 'auth',
-  middleware: false // Disable auth middleware for login page
+  middleware: false
 })
 
 const router = useRouter()
-const authStore = useAuthStore()
 const toast = useToast()
+const authStore = useAuthStore()
 const phone = ref('')
 const password = ref('')
 const loading = ref(false)

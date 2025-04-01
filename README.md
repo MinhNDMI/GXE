@@ -1,76 +1,96 @@
-# Nuxt Minimal Starter
+# Vue3 Admin Dashboard
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A modern admin dashboard built with Vue 3, Nuxt 3, and Tailwind CSS.
 
-## Setup
+## Features
 
-Make sure to install dependencies:
+- 🎨 Modern UI with Tailwind CSS
+- 📱 Responsive design
+- 🔒 Authentication system
+- 📊 Dashboard components
+- 🎯 PrimeVue integration
+- 📦 Pinia state management
+- 🔄 API integration
 
+## Tech Stack
+
+- Vue 3
+- Nuxt 3
+- Tailwind CSS
+- PrimeVue
+- Pinia
+- JavaScript
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+## Getting Started
+
+1. Clone the repository:
 ```bash
-# npm
+git clone https://github.com/yourusername/vue3-admin.git
+cd vue3-admin
+```
+
+2. Install dependencies:
+```bash
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
+# or
 yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+3. Create environment file:
 ```bash
-# npm
+cp .env.example .env
+```
+
+4. Update the environment variables in `.env` file with your configuration.
+
+5. Start the development server:
+```bash
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
+# or
 yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Build the application for production:
+## Project Structure
 
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+```
+├── assets/                 # Static assets
+├── components/            # Vue components
+├── composables/          # Vue composables
+├── config/               # Configuration files
+├── layouts/              # Layout templates
+├── middleware/           # Route middleware
+├── pages/                # Route pages
+├── plugins/              # Nuxt plugins
+├── public/               # Static files
+├── services/             # API services
+├── store/                # Pinia stores
+└── utils/                # Utility functions
 ```
 
-Locally preview production build:
+## Available Scripts
 
-```bash
-# npm
-npm run preview
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run generate` - Generate static site
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
 
-# pnpm
-pnpm preview
+## Contributing
 
-# yarn
-yarn preview
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-# bun
-bun run preview
-```
+## License
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-# Vue3-Pharmago-Source
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
