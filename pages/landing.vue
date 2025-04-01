@@ -53,6 +53,7 @@ const fetchBanner = async () => {
     console.error('Failed to fetch banner:', err)
   } finally {
     loading.value = false
+    console.log('dá',data)
   }
 }
 </script>
