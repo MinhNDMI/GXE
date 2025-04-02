@@ -1,7 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
   // Base URL for API calls
-  baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+  baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://gxe.test/api-cms',
   
   // API endpoints
   endpoints: {
@@ -21,10 +21,11 @@ export const API_CONFIG = {
       changePassword: '/api/v1/user/change-password'
     },
     course: {
-      list: '/api/v1/products',
-      create: '/api/v1/products',
-      update: (id) => `/api/v1/products/${id}`,
-      delete: (id) => `/api/v1/products/${id}`,
+      list: '/api/v1/courses',
+      detail: (id) => `/api/v1/courses/${id}`,
+      create: '/api/v1/courses',
+      update: (id) => `/api/v1/courses/${id}`,
+      delete: (id) => `/api/v1/courses/${id}`,
     },
     banner: {
       list: '/api/news/list',

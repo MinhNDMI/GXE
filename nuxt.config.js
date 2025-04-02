@@ -34,7 +34,8 @@ export default defineNuxtConfig({
     'primeflex/primeflex.css',
     'vue3-toastify/dist/index.css',
     '@/assets/css/tailwind.css',
-    '~/assets/css/main.css'
+    '~/assets/css/main.css',
+    'video.js/dist/video-js.css'
   ],
 
   // Build configuration
@@ -53,27 +54,33 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: ['primevue']
     },
-    server: {
-      port: 3000,
-      host: '0.0.0.0'
-    }
   },
 
   // Runtime configuration
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://gxe.test/api-cms',
       appName: process.env.NUXT_PUBLIC_APP_NAME,
       appDescription: process.env.NUXT_PUBLIC_APP_DESCRIPTION,
       enableDarkMode: process.env.NUXT_PUBLIC_ENABLE_DARK_MODE === 'true',
-      enableAnalytics: process.env.NUXT_PUBLIC_ENABLE_ANALYTICS === 'true'
+      enableAnalytics: process.env.NUXT_PUBLIC_ENABLE_ANALYTICS === 'true',
+      baseUrl: process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:5173' 
+        : process.env.BASE_URL
     }
   },
 
   // Nitro configuration
   nitro: {
     compressPublicAssets: true,
-    minify: true
+    minify: true,
+    devProxy: {
+      '/youtube': {
+        target: 'https://www.youtube.com',
+        changeOrigin: true,
+        secure: false
+      }
+    }
   },
 
   // Development tools
@@ -101,6 +108,7 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/primevue.js',
     '~/plugins/toast.js',
+    { src: '~/plugins/videojs.client.js', mode: 'client' }
     // '~/plugins/code-mirror.js'
   ],
 
@@ -118,7 +126,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-03-29',
 
   server: {
-    port: 5500,
+    port: 5173,
     host: '0.0.0.0',
     timing: false
   },

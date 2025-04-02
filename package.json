@@ -15,6 +15,7 @@
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@pinia/nuxt": "^0.10.1",
+    "@videojs/http-streaming": "^3.15.0",
     "@vueuse/nuxt": "^13.0.0",
     "codemirror": "^5.65.19",
     "codemirror-editor-vue3": "^2.8.0",
@@ -23,6 +24,8 @@
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^3.50.0",
+    "video.js": "^7.21.7",
+    "videojs-youtube": "^3.0.1",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0",
     "vue3-toastify": "^0.2.8"

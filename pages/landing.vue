@@ -1,45 +1,66 @@
 <template>
-  <div class="container">
-    <section class="banner">
-      <div class="banner-content">
-        <h1>This is banner</h1>
+  <div class="container w-full flex flex-col gap-5">
+    <section class="banner p-5">
+      <div class="banner-content h-[80vh] w-1/2 text-white">
+        <h1 class="!text-5xl font-bold mb-10">Histudy Starter is a community for creative people</h1>
+        <p>We just don't give our student only lecture but real life experience.</p>
       </div>
     </section>
     <section class="course flex flex-col items-center gap-4 lg:px-10">
-      <p class="text-2xl font-bold">Danh sách khóa học</p>
+      <p class="!text-5xl font-bold py-9">Danh sách khóa học</p>
       <div class="course-list grid grid-cols-1 lg:grid-cols-4 gap-4 w-full">
-        <div class="course-item min-w-[295px] bg-white rounded-lg p-4 flex flex-col gap-3 justify-center">
-          <div class="w-full h-[172px] ">
-            <img src="https://via.placeholder.com/150" alt="">
-          </div>
-          <p class="text-sm font-medium">Khóa học 1</p>
-          <Rating/>
-          <div class="flex gap-4 items-center">
-            <p class="text-gray-1 text-sm">Lesson</p>
-            <p class="text-gray-1 text-sm">Students</p>
-          </div>
-          <p class="text-gray-1 text-sm">description</p>
-          <div class="flex gap-4 items-center">
-            <p class="text-gray-1 text-lg font-bold line-through">$160.00</p>
-            <p class="text-secondary text-lg font-bold">$44.00</p>
-          </div>
+        <div
+          v-for="course in courses"
+          :key="course.id"
+          class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+        >
+          <NuxtLink :to="`/course/${course.id}`">
+            <div class="relative pb-[56.25%]">
+              <img
+                :src="course.thumbnail || 'https://www.youtube.com/watch?v=FXpIoQ_rT_c'"
+                :alt="course.title"
+                class="absolute top-0 left-0 w-full h-full object-cover"
+              />
+            </div>
+            <div class="p-4">
+              <h2 class="text-xl font-semibold mb-2">{{ course.title }}</h2>
+              <p class="text-gray-600 mb-4 line-clamp-2">{{ course.description }}</p>
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-book text-gray-500"></i>
+                  <span class="text-sm text-gray-500">{{ course.lessonCount }} bài học</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span v-if="course.oldPrice" class="text-gray-400 text-sm line-through">
+                    ${{ course.oldPrice }}
+                  </span>
+                  <span class="text-primary font-bold">${{ course.price }}</span>
+                </div>
+              </div>
+            </div>
+          </NuxtLink>
         </div>
       </div>
     </section>
-    <section>Tin tức</section>
+    <section class=" gap-4 lg:px-10">Tin tức</section>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useBannerStore } from '~/store/modules/banner'
+import { useCourseStore } from '~/store/modules/course'
+
 
 const bannerStore = useBannerStore()
+const courseStore = useCourseStore()  
 const loading = ref(false)
 const error = ref(null)
+const courses = ref([])
 
 onMounted(async () => {
-  await fetchBanner()
+  // await fetchBanner()
+  await fetchCourses()
 })
 
 // Cách 2: Hoặc tạo function riêng để fetch data
@@ -53,7 +74,33 @@ const fetchBanner = async () => {
     console.error('Failed to fetch banner:', err)
   } finally {
     loading.value = false
-    console.log('dá',data)
+    console.log('dá', data)
+  }
+}
+
+const fetchCourses = async () => {
+  try {
+    loading.value = true
+    const response = await courseStore.getCourses()
+    courses.value = response.data
+  } catch (err) {
+    error.value = 'Không thể tải danh sách khóa học'
+    toast.add({
+      severity: 'error',
+      summary: 'Lỗi',
+      detail: 'Không thể tải danh sách khóa học',
+      life: 3000,
+    })
+  } finally {
+    loading.value = false
   }
 }
 </script>
+
+<style>
+.banner {
+  background-image: url('https://rainbowthemes.net/themes/histudy/wp-content/uploads/2024/12/bg-image-19.webp');
+  background-position: center;
+  background-size: cover;
+}
+</style>
