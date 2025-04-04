@@ -1,75 +1,40 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
+  <div class="min-h-screen bg-gray-100 p-4">
     <!-- Loading state -->
     <div>
-      <h1>Course</h1>
+      <p class="text-2xl font-bold">Course</p>
     </div>
 
-    <template>
-      <!-- Guest view -->
-      <!-- <div v-if="!isAuthenticated" class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h1 class="text-2xl font-bold mb-6">{{ course?.title }}</h1>
-          <p class="text-gray-600 mb-8">{{ course?.description }}</p>
-          
-          <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Nội dung khóa học</h2>
-            <CourseList-CourseContentList 
-              :lessons="course?.lessons || []" 
-              preview-only 
-            />
-          </div>
-
-          <div class="text-center">
-            <Button 
-              label="Đăng nhập để học" 
-              icon="pi pi-sign-in" 
-              @click="navigateToLogin" 
-            />
-          </div>
-        </div>
-      </div> -->
-
+    <div>
       <!-- Authenticated view -->
-      <div class="flex h-screen">
-        <!-- Video section (80%) -->
-        <div class="w-4/5 bg-black">
-          <div v-if="currentLesson" class="h-full">
-            <video
-              ref="videoPlayer"
-              class="video-js vjs-default-skin vjs-big-play-centered h-full w-full"
-              controls
-              preload="auto"
-              data-setup='{
-                "techOrder": ["youtube"],
-                "sources": [{
-                  "type": "video/youtube",
-                  "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                }],
-                "youtube": {
-                  "iv_load_policy": 3,
-                  "modestbranding": 1,
-                  "origin": "http://localhost:5173"
-                }
-              }'
-            ></video>
+      <div class="flex flex-col lg:flex-row gap-4">
+        <!-- Video section -->
+        <div class="w-full lg:!w-4/5 order-1 lg:order-1">
+          <div v-if="currentLesson" class="w-full">
+            <div class="plyr__video-embed" id="player">
+              <iframe
+                :src="getYoutubeEmbedUrl(currentLesson.videoUrl)"
+                allowfullscreen
+                allowtransparency
+                allow="autoplay"
+              ></iframe>
+            </div>
           </div>
-          <div v-else class="flex items-center justify-center h-full text-white">
+          <div v-else class="flex items-center justify-center h-full text-gray-600 bg-gray-200 rounded-lg p-8">
             <p>Chọn bài học để bắt đầu</p>
           </div>
         </div>
 
-        <!-- Lesson list (20%) -->
-        <div class="w-1/5 bg-white overflow-y-auto">
-          <!-- <CourseContentList 
-            :lessons="course?.lessons || []"
+        <!-- Lesson list -->
+        <div class="w-full lg:!w-1/5 bg-white rounded-lg shadow-sm order-2 lg:order-2 max-h-[calc(100vh-2rem)] overflow-y-auto">
+          <CourseContentList 
             :current-lesson-id="currentLesson?.id"
             :progress="lessonProgress"
             @select-lesson="handleLessonSelect"
-          /> -->
+          />
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -80,9 +45,8 @@ import { useAuthStore } from '~/store/modules/auth'
 import { useCourseStore } from '~/store/modules/course'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
-import videojs from 'video.js'
-import 'video.js/dist/video-js.css'
-import 'videojs-youtube'
+import Plyr from 'plyr'
+import 'plyr/dist/plyr.css'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -100,8 +64,6 @@ const lessonProgress = ref({})
 const loading = ref(false)
 const error = ref(null)
 const player = ref(null)
-const videoPlayer = ref(null)
-const minWatchPercentage = 80
 
 // Computed property để lấy YouTube ID
 const getYoutubeId = (url) => {
@@ -110,53 +72,54 @@ const getYoutubeId = (url) => {
   return match && match[2].length === 11 ? match[2] : null
 }
 
+// Tạo URL embed cho YouTube
+const getYoutubeEmbedUrl = (url) => {
+  const videoId = getYoutubeId(url)
+  return `https://www.youtube.com/embed/${videoId}?origin=http://localhost:5173&enablejsapi=1&widgetid=1`
+}
+
 // Khởi tạo video player
 const initializePlayer = () => {
   if (currentLesson.value) {
-    const videoId = getYoutubeId(currentLesson.value.videoUrl)
-    const options = {
-      techOrder: ['youtube'],
-      autoplay: false,
-      controls: true,
-      responsive: true,
-      fluid: true,
-      sources: [{
-        type: 'video/youtube',
-        src: `https://www.youtube.com/watch?v=${videoId}`
-      }],
-      youtube: {
-        iv_load_policy: 3,
-        modestbranding: 1,
-        rel: 0,
-        showinfo: 0,
-        origin: 'http://localhost:5173',
-        customVars: {
-          wmode: 'transparent'
+    try {
+      if (player.value) {
+        player.value.destroy()
+      }
+
+      const options = {
+        controls: [
+          'play-large',
+          'play',
+          'progress',
+          'current-time',
+          'mute',
+          'volume',
+          'captions',
+          'settings',
+          'pip',
+          'airplay',
+          'fullscreen'
+        ],
+        youtube: {
+          noCookie: true,
+          rel: 0,
+          showinfo: 0,
+          iv_load_policy: 3
         }
       }
-    }
 
-    if (player.value) {
-      player.value.dispose()
-    }
+      player.value = new Plyr('#player', options)
 
-    try {
-      player.value = videojs(videoPlayer.value, options)
-      
-      player.value.ready(function() {
-        console.log('Player Ready')
-        
-        this.on('timeupdate', () => {
-          const currentTime = this.currentTime()
-          const duration = this.duration()
-          const progress = (currentTime / duration) * 100
-          saveProgress(currentTime, progress)
-        })
+      player.value.on('timeupdate', () => {
+        const currentTime = player.value.currentTime
+        const duration = player.value.duration
+        const progress = (currentTime / duration) * 100
+        saveProgress(currentTime, progress)
+      })
 
-        this.on('ended', () => {
-          console.log('Video ended')
-          handleVideoComplete()
-        })
+      player.value.on('ended', () => {
+        console.log('Video ended')
+        handleVideoComplete()
       })
     } catch (error) {
       console.error('Error initializing video player:', error)
@@ -170,7 +133,7 @@ const saveProgress = async (currentTime, progress) => {
     try {
       await courseStore.saveProgress({
         lessonId: currentLesson.value.id,
-        courseId: course.value.id,
+        courseId: course.value?.id,
         progress,
         currentTime
       })
@@ -193,11 +156,11 @@ const handleVideoComplete = async () => {
       })
 
       // Find and switch to next lesson
-      const currentIndex = course.value.lessons.findIndex(
+      const currentIndex = course.value?.lessons?.findIndex(
         lesson => lesson.id === currentLesson.value.id
       )
       
-      if (currentIndex < course.value.lessons.length - 1) {
+      if (currentIndex < course.value?.lessons?.length - 1) {
         currentLesson.value = course.value.lessons[currentIndex + 1]
       }
     } catch (error) {
@@ -208,9 +171,9 @@ const handleVideoComplete = async () => {
 
 const handleLessonSelect = (lesson) => {
   currentLesson.value = lesson
-  if (player.value) {
-    player.value.src({ type: 'video/mp4', src: lesson.videoUrl })
-  }
+  nextTick(() => {
+    initializePlayer()
+  })
 }
 
 const navigateToLogin = () => {
@@ -253,39 +216,12 @@ const loadProgress = async () => {
 onMounted(async () => {
   await fetchCourseData()
   await nextTick()
-  
-  if (videoPlayer.value) {
-    const options = {
-      techOrder: ['youtube'],
-      autoplay: false,
-      controls: true,
-      sources: [{
-        type: 'video/youtube',
-        src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-      }],
-      youtube: {
-        iv_load_policy: 3,
-        modestbranding: 1,
-        rel: 0,
-        showinfo: 0,
-        origin: 'http://localhost:5173',
-        customVars: {
-          wmode: 'transparent'
-        }
-      }
-    }
-    
-    try {
-      player.value = videojs(videoPlayer.value, options)
-    } catch (error) {
-      console.error('Error initializing video player:', error)
-    }
-  }
+  initializePlayer()
 })
 
 onBeforeUnmount(() => {
   if (player.value) {
-    player.value.dispose()
+    player.value.destroy()
   }
 })
 
@@ -298,23 +234,48 @@ watch(currentLesson, () => {
 </script>
 
 <style>
-/* Custom CSS cho video player */
-.video-js {
+/* Custom CSS cho Plyr */
+.plyr {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  position: relative;
+}
+
+.plyr--video {
+  background: #000;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.plyr__video-embed {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  min-height: 480px;
 }
 
-.vjs-default-skin {
-  /* Tùy chỉnh giao diện player */
-  --vjs-theme-color: #00a0d6;
+.plyr__video-embed iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.vjs-big-play-centered .vjs-big-play-button {
-  /* Tùy chỉnh nút play chính giữa */
-  background-color: rgba(0, 160, 214, 0.8);
-  border-radius: 50%;
-  border: none;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .plyr {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 640px) {
+  .plyr {
+    min-height: 240px;
+  }
 }
 </style>
 

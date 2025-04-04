@@ -38,7 +38,7 @@
     <main class="!w-full !max-w-full">
       <slot />
     </main>
-    <footer class="py-12 bg-white">
+    <footer class="py-12 bg-white border-t border-gray-200">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
           <!-- Logo và Giới thiệu -->

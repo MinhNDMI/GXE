@@ -8,7 +8,24 @@ export default defineNuxtPlugin((nuxtApp) => {
       options: {
         type: Object,
         default() {
-          return {}
+          return {
+            techOrder: ['youtube'],
+            autoplay: false,
+            controls: true,
+            responsive: true,
+            fluid: true,
+            sources: [{
+              type: 'video/youtube',
+              src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+            }],
+            youtube: {
+              iv_load_policy: 3,
+              modestbranding: 1,
+              rel: 0,
+              showinfo: 0,
+              origin: window.location.origin
+            }
+          }
         }
       }
     },
@@ -18,7 +35,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
     mounted() {
-      this.player = videojs(this.$refs.videoPlayer, this.options)
+      this.$nextTick(() => {
+        this.player = videojs(this.$refs.videoPlayer, this.options)
+      })
     },
     beforeUnmount() {
       if (this.player) {
